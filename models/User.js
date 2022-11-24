@@ -29,6 +29,13 @@ const userSchema = new Schema(
     }
 );
 
+// Create a virtual property `friendCount` that gets the user's friends array field on query
+userSchema.virtual('friendCount').get(function() {
+    return this.friends.length;
+});
+
+
+// Initialize User model
 const User = model('user', userSchema);
 
 module.exports = User;
