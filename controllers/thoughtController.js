@@ -104,7 +104,7 @@ function deleteReaction(req, res) {
     // use pull operator to remove reaction based off id
     Thought.findOneAndUpdate(
           { _id: req.params.thoughtId },
-          { $pull: { reactions: req.params.reactionId } },
+          { $pull: { reactions: { reactionId: req.params.reactionId } } },
           { new: true }
         )
         // conditional based off user existing or not
