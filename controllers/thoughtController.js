@@ -76,11 +76,54 @@ function deleteThought(req, res) {
 
 // create reaction
 function createReaction(req, res) {
-
+    // find thought by id and add new reaction to current thought
+    // use add to set for unique reactions
+    console.log(req.body);
+    Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $addToSet: {reactions: req.body }},
+        { runValidators: true, new: true }
+    )
+        .then((thought) =>
+        !thought
+        ? res.status(404).json({ message: 'No thought found with this ID!' })
+        : res.json({ message: 'Thought was updated with the following reaction: ', thought})
+    )
+    .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+    });
 }
 
 // delete reaction
 function deleteReaction(req, res) {
+    console.log(req.params);
+    // find thought by id
+    // delete reaction based off reaction id
+    // both values in the request params
+    // use pull operator to remove reaction based off id
+    Thought.findOneAndUpdate(
+          { _id: req.params.thoughtId },
+          { $pull: { reactions: req.params.reactionId } },
+          { new: true }
+        )
+        // conditional based off user existing or not
+        // if user does not exist, return does not exist
+        // else return friend added 
+      .then((thought) => {
+
+        console.log(thought);
+        !thought
+        ? res
+            .status(404)
+            .json('Thought with this ID does not exist!')
+        : res.json({message: `Deleted reaction from current thought `, thought})
+      })
+      
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      }); 
 
 }
 
