@@ -15,7 +15,7 @@ function  createThought(req, res) {
         // find user by id and add the new thought's id to current user
         return User.findOneAndUpdate(
           { _id: req.body.userId },
-          { $push: { thoughts: thought._id } },
+          { $addToSet: { thoughts: thought._id } },
           { new: true }
         );
       })
@@ -65,12 +65,19 @@ function updateThought(req, res) {
 // delete thought from db by id
 function deleteThought(req, res) {
     // find thought by thought id params and delete
+    // if thought is found, then find user with thought id and delete thought from user
     Thought.findOneAndRemove({ _id: req.params.thoughtId })
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: 'No thought found with this ID!' })
-          : res.json({ message: 'The following thought was deleted!', thought})
-      )
+          :User.findOneAndUpdate(
+            { thoughts: req.params.thoughtId },
+            { $pull: { thoughts: req.params.thoughtId } },
+            { new: true }
+          )
+      ).then((thought) => {
+        res.json({ message: 'The following thought was deleted!', thought})
+      }) 
       .catch((err) => res.status(500).json(err));
 }
 
