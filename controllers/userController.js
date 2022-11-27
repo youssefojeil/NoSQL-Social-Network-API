@@ -61,6 +61,7 @@ function addFriend(req, res) {
     // find user by id
     // add friend based off friend's user id
     // both values in the request params
+    // use addtoset for no duplicate friends
     User.findOneAndUpdate(
           { _id: req.params.userId },
           { $addToSet: { friends: req.params.friendId } },
@@ -88,7 +89,34 @@ function addFriend(req, res) {
 
 // delete friend from user's friendlist
 function deleteFriend(req, res) {
+    console.log(req.params);
+    // find user by id
+    // delete friend based off friend's user id
+    // both values in the request params
+    // use pull operator to remove friend based off id
+    User.findOneAndUpdate(
+          { _id: req.params.userId },
+          { $pull: { friends: req.params.friendId } },
+          { new: true }
+        )
+        // conditional based off user existing or not
+        // if user does not exist, return does not exist
+        // else return friend added 
+      .then((user) => {
 
+        console.log(user);
+        !user
+        ? res
+            .status(404)
+            .json('User with this ID does not exist!')
+        : res.json({message: `Deleted friend from user's friends list `, user})
+      })
+      
+ 
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
 }
 
 
