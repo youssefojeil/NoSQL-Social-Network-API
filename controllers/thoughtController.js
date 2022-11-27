@@ -1,4 +1,5 @@
 const Thought = require('../models/Thought');
+const User = require('../models/User');
 
 // get all thoughts from db 
 function getThoughts(req, res) {
@@ -6,18 +7,33 @@ function getThoughts(req, res) {
     .catch((err) => res.status(500).json(err));
 };
 
-// // create new thought to db 
-// function postUser(req, res) {
-//     User.create(req.body)
-//     .then((dbUserData) => res.json(dbUserData))
-//     .catch((err) => res.status(500).json(err));
-// };
+// create new thought
+function  createThought(req, res) {
+    Thought.create(req.body)
+      .then((thought) => {
+        return User.findOneAndUpdate(
+          { _id: req.body.userId },
+          { $push: { thoughts: thought._id } },
+          { new: true }
+        );
+      })
+      .then((user) =>
+        !user
+          ? res
+              .status(404)
+              .json({ message: 'thought created, but no users found with this ID' })
+          : res.json({ message: 'thought created' })
+      )
+      .catch((err) => {
+        console.error(err);
+      });
+};
 
 // get thought by id from db
 function getThoughtById(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
     .then((thought) =>
-    !user
+    !thought
       ? res.status(404).json({ message: 'No Thought found with that ID' })
       : res.json(thought)
   )
@@ -56,7 +72,7 @@ function getThoughtById(req, res) {
 
 module.exports = { 
     getThoughts, 
-    // postUser, 
+    createThought, 
     getThoughtById, 
     // updateUser,
     // deleteUser 
