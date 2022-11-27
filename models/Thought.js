@@ -23,11 +23,18 @@ const thoughtSchema = new Schema(
     },
     {
         toJSON: {
+            virtuals: true,
             getters: true
         },
         id: false
     }
 );
+
+
+// Create a virtual property `reactionCount` that gets the number of reactions for each thought
+thoughtSchema.virtual("reactionCount").get(function () {
+    return this.reactions.length;
+});
 
 
 const Thought = model('thought', thoughtSchema);
