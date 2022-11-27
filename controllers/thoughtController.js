@@ -95,7 +95,7 @@ function createReaction(req, res) {
     });
 }
 
-// delete reaction
+// delete reaction not working properly
 function deleteReaction(req, res) {
     console.log(req.params);
     // find thought by id
