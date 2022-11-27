@@ -51,6 +51,44 @@ function deleteUser(req, res) {
           : res.json({ message: 'The following user was deleted!', user})
       )
       .catch((err) => res.status(500).json(err));
+};
+
+
+// add friend to user's friendlist
+function addFriend(req, res) {
+
+    console.log(req.params);
+    // find user by id
+    // add friend based off friend's user id
+    // both values in the request params
+    User.findOneAndUpdate(
+          { _id: req.params.userId },
+          { $addToSet: { friends: req.params.friendId } },
+          { new: true }
+        )
+        // conditional based off user existing or not
+        // if user does not exist, return does not exist
+        // else return friend added 
+      .then((user) => {
+
+        console.log(user);
+        !user
+        ? res
+            .status(404)
+            .json('User with this ID does not exist!')
+        : res.json({message: `Added friend to user's friends list `, user})
+      })
+      
+ 
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+}
+
+// delete friend from user's friendlist
+function deleteFriend(req, res) {
+
 }
 
 
@@ -59,5 +97,7 @@ module.exports = {
     postUser, 
     getUserById, 
     updateUser,
-    deleteUser 
+    deleteUser,
+    addFriend,
+    deleteFriend 
 };
