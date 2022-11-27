@@ -40,40 +40,40 @@ function getThoughtById(req, res) {
   .catch((err) => res.status(500).json(err));
 };
 
-// update existing user by id from db
-// function updateUser(req, res) {
-//     User.findOneAndUpdate(
-//         { _id: req.params.userId },
-//         { $set: req.body},
-//         { runValidators: true, new: true }
-//     )
-//         .then((user) =>
-//         !user
-//         ? res.status(404).json({ message: 'No user with this ID!' })
-//         : res.json({ message: 'User was updated to the following: ', user})
-//     )
-//     .catch((err) => {
-//         console.log(err);
-//         res.status(500).json(err);
-//     });
-// };
+// update existing thought by id from db
+function updateThought(req, res) {
+    Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $set: req.body},
+        { runValidators: true, new: true }
+    )
+        .then((thought) =>
+        !thought
+        ? res.status(404).json({ message: 'No thought found with this ID!' })
+        : res.json({ message: 'Thought was updated to the following: ', thought})
+    )
+    .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+};
 
-// delete user from db by id
-// function deleteUser(req, res) {
-//     User.findOneAndRemove({ _id: req.params.userId })
-//       .then((user) =>
-//         !user
-//           ? res.status(404).json({ message: 'No user with this ID!' })
-//           : res.json({ message: 'The following user was deleted!', user})
-//       )
-//       .catch((err) => res.status(500).json(err));
-// }
+// delete thought from db by id
+function deleteThought(req, res) {
+    Thought.findOneAndRemove({ _id: req.params.thoughtId })
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({ message: 'No thought found with this ID!' })
+          : res.json({ message: 'The following thought was deleted!', thought})
+      )
+      .catch((err) => res.status(500).json(err));
+}
 
 
 module.exports = { 
     getThoughts, 
     createThought, 
     getThoughtById, 
-    // updateUser,
-    // deleteUser 
+    updateThought,
+    deleteThought 
 };
