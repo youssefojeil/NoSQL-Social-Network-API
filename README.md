@@ -12,7 +12,7 @@
 <li><a href="#questions">Questions</a></li>
 
 ## Installation
-The modules used in this application are [MongoDB](https://www.mongodb.com/home), [Mongoose](https://mongoosejs.com/), & [Express.js](https://www.npmjs.com/package/express).
+The modules used in this application are [Mongoose](https://mongoosejs.com/), [Express.js](https://www.npmjs.com/package/express) & [MongoDB](https://www.mongodb.com/home) for our database.
 
 To install necessary dependencies, run the following command:
 ```sh
